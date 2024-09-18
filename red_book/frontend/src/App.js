@@ -1,13 +1,16 @@
 import React from 'react';
-import './App.css';
-import MapComponent from '../src/components/MapComponent.js';
-
-function App() {
+import MapComponent from './components/MapComponent';
+import Sidebar from './components/Sidebar';
+import './App.css'; // создаем стили для общего контейнера
+const App = () => {
   return (
-    <div className="App">
-      <MapComponent />
+    <div className="app-container">
+      <Sidebar />
+      <div className="map">
+        <MapComponent />
+      </div>
     </div>
   );
-}
+};
 
 export default App;
