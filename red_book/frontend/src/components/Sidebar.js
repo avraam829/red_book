@@ -52,6 +52,15 @@ const Sidebar = () => {
           />
           Охранные зоны
         </label>
+        <label>
+          <input
+            type="checkbox"
+            name="safezone"
+            checked={filters.safezone}
+            onChange={handleCheckboxChange}
+          />
+          Кадастровые участки
+          </label>
       </div>
     </div>
   );
