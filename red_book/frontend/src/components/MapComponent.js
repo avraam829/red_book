@@ -9,7 +9,7 @@ import { Feature } from 'ol';
 import { Style, Stroke, Fill } from 'ol/style';
 import { fromLonLat } from 'ol/proj';
 import proj4 from 'proj4';
-import { datapark } from './data'; // Import data from data.js
+import { datapark } from './data'; // Импорт данных
 
 proj4.defs('EPSG:2000', '+proj=tmerc +lat_0=0 +lon_0=37.6173 +k=1 +x_0=1000000 +y_0=1000000 +datum=WGS84 +units=m +no_defs');
 
@@ -45,21 +45,19 @@ const createVectorLayer = () => {
   });
 };
 
-const MapComponent = () => {
+const MapComponent = ({ showKadatrZones }) => {
   const mapRef = useRef(null);
-  const [map, setMap] = useState(null);
   const [vectorLayer, setVectorLayer] = useState(null);
 
   useEffect(() => {
     const center = fromLonLat([37.410791130, 55.743688192]);
 
-    const newMap = new Map({
+    const map = new Map({
       target: mapRef.current,
       layers: [
         new TileLayer({
           source: new OSM(),
         }),
-        createVectorLayer(),
       ],
       view: new View({
         center: center,
@@ -67,21 +65,20 @@ const MapComponent = () => {
       }),
     });
 
-    setMap(newMap);
-    setVectorLayer(createVectorLayer());
+    const layer = createVectorLayer();
+    setVectorLayer(layer);
+    map.addLayer(layer);
 
     return () => {
-      newMap.setTarget(null); // Cleanup map
+      map.setTarget(null); // Очистка карты
     };
   }, []);
 
-  // Example function to show/hide vector layer
-  const toggleVectorLayer = () => {
-    if (map && vectorLayer) {
-      const isVisible = vectorLayer.getVisible();
-      vectorLayer.setVisible(!isVisible);
+  useEffect(() => {
+    if (vectorLayer) {
+      vectorLayer.setVisible(showKadatrZones);
     }
-  };
+  }, [showKadatrZones, vectorLayer]);
 
   return (
     <div>
@@ -89,7 +86,6 @@ const MapComponent = () => {
         ref={mapRef}
         style={{ width: '100%', height: '100vh', position: 'relative' }}
       ></div>
-      <button onClick={toggleVectorLayer}>Toggle Polygon Layer</button>
     </div>
   );
 };

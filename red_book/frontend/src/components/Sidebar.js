@@ -1,21 +1,25 @@
 import React, { useState } from 'react';
-import './Sidebar.css'; // создадим стили для компонента
+import './Sidebar.css'; // стили для компонента
 
-const Sidebar = () => {
-  // Состояния для чекбоксов
+const Sidebar = ({ onFilterChange }) => {
   const [filters, setFilters] = useState({
     animals: false,
     plants: false,
     protectedZones: false,
+    kadatrZones: false,
   });
 
-  // Функция для обработки изменений в чекбоксах
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
     setFilters({
       ...filters,
       [name]: checked,
     });
+
+    // Передаем изменения состояния чекбоксов в App
+    if (onFilterChange) {
+      onFilterChange(name, checked);
+    }
   };
 
   return (
@@ -60,7 +64,7 @@ const Sidebar = () => {
             onChange={handleCheckboxChange}
           />
           Кадастровые участки
-          </label>
+        </label>
       </div>
     </div>
   );
