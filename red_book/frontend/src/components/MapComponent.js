@@ -8,6 +8,7 @@ import { Polygon, Point } from 'ol/geom';
 import { Feature } from 'ol';
 import { Style, Stroke, Fill, Icon } from 'ol/style';
 import { fromLonLat } from 'ol/proj';
+import Overlay from 'ol/Overlay';
 import proj4 from 'proj4';
 import { datapark } from './data'; // Импорт данных
 
@@ -68,22 +69,19 @@ const createPointFeature = (lon, lat) => {
 
 // Функция для создания слоя с точками
 const createPointLayer = () => {
-  // Основная точка
   const baseLon = 37.412304;
   const baseLat = 55.746659;
 
-  // Смещения для дополнительных точек
   const offsets = [
-    [0.0011, 0.0011], // 10 метров примерно в градусах (примерно)
-    [0.0001, -0.0011],
+    [0.0011, 0.0011],
+    [0.0011, -0.0011],
     [-0.0011, 0.0011],
     [-0.0011, -0.0011],
     [0.00015, 0.00015],
   ];
 
-  // Создаем массив всех точек
   const features = [
-    createPointFeature(baseLon, baseLat), // Основная точка
+    createPointFeature(baseLon, baseLat),
     ...offsets.map(offset => createPointFeature(baseLon + offset[0], baseLat + offset[1])),
   ];
 
@@ -99,8 +97,10 @@ const createPointLayer = () => {
 const MapComponent = ({ showKadatrZones, showAnimals }) => {
   const mapRef = useRef(null);
   const [vectorLayer, setVectorLayer] = useState(null);
-  const [pointLayer, setPointLayer] = useState(null); // Слой с точками
-
+  const [pointLayer, setPointLayer] = useState(null);
+  const [popupContent, setPopupContent] = useState('');
+  const popupRef = useRef(null);
+  const [popupVisible, setPopupVisible] = useState(false); // Для управления видимостью popup
   useEffect(() => {
     const center = fromLonLat([37.410791130, 55.743688192]);
 
@@ -127,6 +127,40 @@ const MapComponent = ({ showKadatrZones, showAnimals }) => {
     setPointLayer(pointLayer);
     map.addLayer(pointLayer);
 
+    // Создание popup-элемента
+    const popup = new Overlay({
+      element: popupRef.current,
+      positioning: 'bottom-center',
+      stopEvent: false,
+      offset: [0, -10],
+    });
+    map.addOverlay(popup);
+
+    // Обработчик кликов по карте
+    map.on('click', function (evt) {
+      let clickedOnPoint = false;
+      map.forEachFeatureAtPixel(evt.pixel, function (feature) {
+        if (feature.getGeometry().getType() === 'Point') {
+          const coordinates = feature.getGeometry().getCoordinates();
+          popup.setPosition(coordinates); // Открываем popup
+          setPopupContent(`
+            <strong>Вид:</strong> Белка рыжая<br />
+            <strong>Популяция:</strong> 1 млн<br />
+            <strong>Корм:</strong> семечки<br />
+            <strong>Красная книга:</strong> в Москве мало<br />
+            <strong>Подробная информация по ссылке</strong>
+          `);
+          setPopupVisible(true);
+          clickedOnPoint = true;
+        }
+      });
+
+      if (!clickedOnPoint) {
+        popup.setPosition(undefined); // Закрываем popup при клике не на точку
+        setPopupVisible(false);
+      }
+    });
+
     return () => {
       map.setTarget(null); // Очистка карты при размонтировании компонента
     };
@@ -152,6 +186,23 @@ const MapComponent = ({ showKadatrZones, showAnimals }) => {
         ref={mapRef}
         style={{ width: '100%', height: '100vh', position: 'relative' }}
       ></div>
+      <div
+        ref={popupRef}
+        id="popup"
+        style={{
+          backgroundColor: '#f9f9f9',
+          borderRadius: '10px',
+          padding: '15px',
+          border: '2px solid #333',
+          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+          width: '250px',
+          textAlign: 'left',
+          display: popupVisible ? 'block' : 'none', // Скрываем или показываем popup
+          position: 'absolute',
+        }}
+      >
+        <div dangerouslySetInnerHTML={{ __html: popupContent }} />
+      </div>
     </div>
   );
 };
