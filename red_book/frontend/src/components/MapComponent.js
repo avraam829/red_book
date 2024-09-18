@@ -11,6 +11,7 @@ import { fromLonLat } from 'ol/proj';
 import Overlay from 'ol/Overlay';
 import proj4 from 'proj4';
 import { datapark } from './data'; // Импорт данных
+import belkaIcon from '../images/belka.svg'; // Импорт иконки
 
 proj4.defs('EPSG:2000', '+proj=tmerc +lat_0=0 +lon_0=37.6173 +k=1 +x_0=1000000 +y_0=1000000 +datum=WGS84 +units=m +no_defs');
 
@@ -48,7 +49,7 @@ const createVectorLayer = () => {
   });
 };
 
-// Функция для создания одной точки
+// Функция для создания одной точки с иконкой белки
 const createPointFeature = (lon, lat) => {
   const pointFeature = new Feature({
     geometry: new Point(fromLonLat([lon, lat])),
@@ -57,9 +58,9 @@ const createPointFeature = (lon, lat) => {
   pointFeature.setStyle(
     new Style({
       image: new Icon({
-        color: 'blue',
-        crossOrigin: 'anonymous',
-        src: 'https://openlayers.org/en/latest/examples/data/dot.png',
+        anchor: [0.5, 1], // Задаем якорь для корректного отображения иконки
+        src: belkaIcon, // Путь к SVG-файлу белки
+        scale: 0.04, // Масштаб иконки (можно подкорректировать)
       }),
     })
   );
@@ -101,6 +102,7 @@ const MapComponent = ({ showKadatrZones, showAnimals }) => {
   const [popupContent, setPopupContent] = useState('');
   const popupRef = useRef(null);
   const [popupVisible, setPopupVisible] = useState(false); // Для управления видимостью popup
+
   useEffect(() => {
     const center = fromLonLat([37.410791130, 55.743688192]);
 
