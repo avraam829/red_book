@@ -55,8 +55,8 @@ const Sidebar = () => {
         <label>
           <input
             type="checkbox"
-            name="safezone"
-            checked={filters.safezone}
+            name="kadatrZones"
+            checked={filters.kadatrZones}
             onChange={handleCheckboxChange}
           />
           Кадастровые участки
