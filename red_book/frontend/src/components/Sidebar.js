@@ -3,10 +3,10 @@ import './Sidebar.css'; // стили для компонента
 
 const Sidebar = ({ onFilterChange }) => {
   const [filters, setFilters] = useState({
-    animals: false,
-    plants: false,
-    protectedZones: false,
-    kadatrZones: false,
+    animals: true,
+    plants: true,
+    protectedZones: true,
+    kadatrZones: true,
   });
 
   const handleCheckboxChange = (e) => {
