@@ -1,18 +1,19 @@
-from flask import Flask
-from flask_cors import CORS
-from routes import species_bp
-from models import db
+from flask import Flask, jsonify, render_template
+import folium
 
 app = Flask(__name__)
-app.config.from_object('config.Config')
-CORS(app)
 
-db.init_app(app)
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-with app.app_context():
-    db.create_all()
-
-app.register_blueprint(species_bp, url_prefix='/api')
+@app.route('/map')
+def map():
+    # Создаем карту с начальной позицией и зумом
+    m = folium.Map(location=[51.1657, 10.4515], zoom_start=6)
+    # Сохраняем карту в HTML файл
+    m.save('templates/map.html')
+    return jsonify({"message": "Map generated successfully"})
 
 if __name__ == '__main__':
     app.run(debug=True)
