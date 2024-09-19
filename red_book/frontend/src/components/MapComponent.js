@@ -118,12 +118,12 @@ const MapComponent = ({ showKadatrZones, showAnimals }) => {
       }),
     });
 
-    // Создаем и добавляем слой с полигонами
+    // слой с полигонами
     const layer = createVectorLayer();
     setVectorLayer(layer);
     map.addLayer(layer);
 
-    // добавляем слой с точками
+    // слой с точками
     const pointLayer = createPointLayer();
     setPointLayer(pointLayer);
     map.addLayer(pointLayer);
@@ -145,10 +145,16 @@ const MapComponent = ({ showKadatrZones, showAnimals }) => {
           const coordinates = feature.getGeometry().getCoordinates();
           popup.setPosition(coordinates); // Открываем popup
           setPopupContent(`
-            <strong>Вид:</strong> Белка рыжая<br />
-            <strong>Популяция:</strong> 1 млн<br />
-            <strong>Корм:</strong> семечки<br />
-            <strong>Красная книга:</strong> в Москве мало<br />
+            <strong>Царство:</strong> Животные<br />
+            <strong>Тип: </strong> Хордовые<br />
+            <strong>Класс:</strong> Млекопитающие<br />
+            <strong>Отряд:</strong> Грызуны<br />
+            <strong>Семейство:</strong> Беличьи<br />
+            <strong>Род:</strong> Белки<br />
+            <strong>Вид:</strong> Обыкновенная белка<br />
+            <strong>Питание:</strong> Семена хвойных деревьев, орехи, фрукты и ягоды<br />
+            <strong>Живут:</strong> Убежища устраивают в дуплах деревьев, иного селяться в скворечниках<br />
+            <strong>Красная книга:</strong> Падающая популяция, не в карсной книге<br />
             <strong>Подробная информация по ссылке</strong>
           `);
           setPopupVisible(true);
@@ -167,14 +173,14 @@ const MapComponent = ({ showKadatrZones, showAnimals }) => {
     };
   }, []);
 
-  // Управление видимостью 
+ 
   useEffect(() => {
     if (vectorLayer) {
       vectorLayer.setVisible(showKadatrZones);
     }
   }, [showKadatrZones, vectorLayer]);
 
-  // Управление видимостью слоя 
+  
   useEffect(() => {
     if (pointLayer) {
       pointLayer.setVisible(showAnimals);
@@ -196,7 +202,7 @@ const MapComponent = ({ showKadatrZones, showAnimals }) => {
           padding: '15px',
           border: '2px solid #333',
           boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-          width: '250px',
+          width: '280px',
           textAlign: 'left',
           display: popupVisible ? 'block' : 'none', 
           position: 'absolute',
