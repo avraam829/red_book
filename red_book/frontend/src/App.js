@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import MapComponent from './components/MapComponent';
 import Sidebar from './components/Sidebar';
-import './App.css'; // создаем стили для общего контейнера
+import './App.css';
 
 const App = () => {
   const [showKadatrZones, setShowKadatrZones] = useState(false);
-  const [showAnimals, setShowAnimals] = useState(false); // Состояние для слоя с точками (animals)
+  const [showAnimals, setShowAnimals] = useState(false); 
 
   const handleFilterChange = (name, checked) => {
     if (name === 'kadatrZones') {
       setShowKadatrZones(checked);
     } else if (name === 'animals') {
-      setShowAnimals(checked); // Обработка состояния для animals
+      setShowAnimals(checked); 
     }
   };
 

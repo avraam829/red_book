@@ -10,12 +10,12 @@ import { Style, Stroke, Fill, Icon } from 'ol/style';
 import { fromLonLat } from 'ol/proj';
 import Overlay from 'ol/Overlay';
 import proj4 from 'proj4';
-import { datapark } from './data'; // Импорт данных
-import belkaIcon from '../images/belka.svg'; // Импорт иконки
+import { datapark } from './data'; 
+import belkaIcon from '../images/belka.svg'; 
 
 proj4.defs('EPSG:2000', '+proj=tmerc +lat_0=0 +lon_0=37.6173 +k=1 +x_0=1000000 +y_0=1000000 +datum=WGS84 +units=m +no_defs');
 
-// Функция для создания полигона
+
 const createPolygonFeature = () => {
   const parkCoords = datapark.map(coord => fromLonLat(coord));
   const parkPolygon = new Polygon([parkCoords]);
@@ -38,7 +38,7 @@ const createPolygonFeature = () => {
   return feature;
 };
 
-// Функция для создания слоя с полигоном
+
 const createVectorLayer = () => {
   const vectorSource = new VectorSource({
     features: [createPolygonFeature()],
@@ -49,7 +49,7 @@ const createVectorLayer = () => {
   });
 };
 
-// Функция для создания одной точки с иконкой белки
+
 const createPointFeature = (lon, lat) => {
   const pointFeature = new Feature({
     geometry: new Point(fromLonLat([lon, lat])),
@@ -58,9 +58,9 @@ const createPointFeature = (lon, lat) => {
   pointFeature.setStyle(
     new Style({
       image: new Icon({
-        anchor: [0.5, 1], // Задаем якорь для корректного отображения иконки
-        src: belkaIcon, // Путь к SVG-файлу белки
-        scale: 0.04, // Масштаб иконки (можно подкорректировать)
+        anchor: [0.5, 1], 
+        src: belkaIcon, 
+        scale: 0.04, 
       }),
     })
   );
@@ -68,7 +68,6 @@ const createPointFeature = (lon, lat) => {
   return pointFeature;
 };
 
-// Функция для создания слоя с точками
 const createPointLayer = () => {
   const baseLon = 37.412304;
   const baseLat = 55.746659;
@@ -124,12 +123,12 @@ const MapComponent = ({ showKadatrZones, showAnimals }) => {
     setVectorLayer(layer);
     map.addLayer(layer);
 
-    // Создаем и добавляем слой с точками
+    // добавляем слой с точками
     const pointLayer = createPointLayer();
     setPointLayer(pointLayer);
     map.addLayer(pointLayer);
 
-    // Создание popup-элемента
+    // Создание popup
     const popup = new Overlay({
       element: popupRef.current,
       positioning: 'bottom-center',
@@ -158,24 +157,24 @@ const MapComponent = ({ showKadatrZones, showAnimals }) => {
       });
 
       if (!clickedOnPoint) {
-        popup.setPosition(undefined); // Закрываем popup при клике не на точку
+        popup.setPosition(undefined); // Закрываем 
         setPopupVisible(false);
       }
     });
 
     return () => {
-      map.setTarget(null); // Очистка карты при размонтировании компонента
+      map.setTarget(null); // Очистка карты
     };
   }, []);
 
-  // Управление видимостью слоя с полигонами
+  // Управление видимостью 
   useEffect(() => {
     if (vectorLayer) {
       vectorLayer.setVisible(showKadatrZones);
     }
   }, [showKadatrZones, vectorLayer]);
 
-  // Управление видимостью слоя с точками
+  // Управление видимостью слоя 
   useEffect(() => {
     if (pointLayer) {
       pointLayer.setVisible(showAnimals);
@@ -199,7 +198,7 @@ const MapComponent = ({ showKadatrZones, showAnimals }) => {
           boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
           width: '250px',
           textAlign: 'left',
-          display: popupVisible ? 'block' : 'none', // Скрываем или показываем popup
+          display: popupVisible ? 'block' : 'none', 
           position: 'absolute',
         }}
       >

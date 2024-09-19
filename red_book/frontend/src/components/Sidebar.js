@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Sidebar.css'; // стили для компонента
+import './Sidebar.css';
 
 const Sidebar = ({ onFilterChange }) => {
   const [filters, setFilters] = useState({
@@ -16,7 +16,7 @@ const Sidebar = ({ onFilterChange }) => {
       [name]: checked,
     });
 
-    // Передаем изменения состояния чекбоксов в App
+  
     if (onFilterChange) {
       onFilterChange(name, checked);
     }
